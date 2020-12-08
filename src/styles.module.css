@@ -1,9 +1,36 @@
 /* add css module styles here (optional) */
 
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
-  text-align: center;
+.imgPreview{
+  width: 140px;
+  height: 140px;
+  margin-left: 15px;
+}
+
+.buttonContainer{
+  position: absolute;
+  bottom: 0;
+  right: 50px;
+  flex-direction: row;
+}
+
+.downButtonContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 15px 10px
+}
+
+.modalContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin-top: 15px;
+}
+
+.closeButton{
+  position: absolute;
+  right: 50px;
+  top: 100px;
 }

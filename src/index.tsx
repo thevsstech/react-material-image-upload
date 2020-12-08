@@ -1,10 +1,4 @@
-import * as React from 'react'
-import styles from './styles.module.css'
-
-interface Props {
-  text: string
-}
-
-export const ExampleComponent = ({ text }: Props) => {
-  return <div className={styles.test}>Example Component: {text}</div>
-}
+import './styles.module.css'
+export { default as ImageUploader } from './ImageUploader'
+export { default as ImageCropper } from './ImageCropper'
+export * from './SingleUploaderModal'
