@@ -7,6 +7,7 @@ import React, {
 import { Modal } from './Modal'
 
 import ImageUploader, {
+  ImageType,
   ImageUploaderProps,
   ImageUploaderRef
 } from './ImageUploader'
@@ -29,8 +30,8 @@ export interface SingleUploaderRef {
 
 type State = {
   visible: boolean
-  defaultImage?: string
-  onSave: (image?: string) => void
+  defaultImage?: ImageType
+  onSave: (image: ImageType) => void
   onCancel?: () => void
 }
 type ShowParameters = Omit<State, 'visible'>
@@ -61,7 +62,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       }))
     }, [])
     const handleSave = useCallback(() => {
-      state.onSave(ref.current ? ref.current.getImageUrl() : undefined)
+      state.onSave(ref.current ? ref.current.getImageUrl() : {})
       handleClose()
     }, [state.onSave, ref])
 

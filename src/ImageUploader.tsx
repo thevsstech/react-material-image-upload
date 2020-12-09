@@ -22,15 +22,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+export type ImageType = {
+  url?: string
+  name?: string
+}
+
 export type ImageUploaderProps = {
   selectImageText?: string | JSX.Element
-  defaultImage?: string
+  defaultImage?: ImageType
   previewText: string
   cropperStyle?: React.CSSProperties
 }
 
 export type ImageUploaderRef = {
-  getImageUrl: () => string
+  getImageUrl: () => ImageType
 }
 
 export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
@@ -43,7 +48,7 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
     },
     ref
   ) => {
-    const [image, setImage] = useState<string | undefined>(defaultImage)
+    const [image, setImage] = useState<ImageType | undefined>(defaultImage)
     const inputRef = useRef<HTMLInputElement>(null)
     const previewRef = useRef<HTMLImageElement>(null)
     const [url, setUrl] = useState<string>()
@@ -51,9 +56,12 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
       ref,
       () => ({
         // @ts-ignore
-        getImageUrl: () => url
+        getImageUrl: () => ({
+          name: image?.name,
+          url
+        })
       }),
-      [url]
+      [image?.name, url]
     )
 
     const classes = useStyles()
@@ -73,7 +81,10 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
 
           reader.onload = function (e: ProgressEvent<FileReader>) {
             if (e && e.target?.result) {
-              setImage(e.target.result as string)
+              setImage({
+                url: e.target.result as string,
+                name: files[0].name
+              })
             }
           }
 
@@ -88,10 +99,10 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
     }
 
     const cropper = useMemo(() => {
-      return image ? (
-        <ImageCropper src={image} style={cropperStyle} onCrop={onCrop} />
+      return image?.url ? (
+        <ImageCropper src={image?.url} style={cropperStyle} onCrop={onCrop} />
       ) : null
-    }, [image, onCrop, cropperStyle])
+    }, [image?.url, onCrop, cropperStyle])
 
     return (
       <form className={styles.uploaderContainer}>
