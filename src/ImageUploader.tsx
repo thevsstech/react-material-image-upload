@@ -23,6 +23,7 @@ export type ImageUploaderProps = {
   selectImageText?: string | JSX.Element
   defaultImage?: string
   previewText: string
+  cropperStyle?: React.CSSProperties
 }
 
 export type ImageUploaderRef = {
@@ -31,7 +32,12 @@ export type ImageUploaderRef = {
 
 export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
   (
-    { selectImageText = 'Select Image', previewText = 'Preview', defaultImage },
+    {
+      selectImageText = 'Select Image',
+      previewText = 'Preview',
+      cropperStyle,
+      defaultImage
+    },
     ref
   ) => {
     const [image, setImage] = useState<string | undefined>(defaultImage)
@@ -79,8 +85,10 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
     }
 
     const cropper = useMemo(() => {
-      return image ? <ImageCropper src={image} onCrop={onCrop} /> : null
-    }, [image, onCrop])
+      return image ? (
+        <ImageCropper src={image} style={cropperStyle} onCrop={onCrop} />
+      ) : null
+    }, [image, onCrop, cropperStyle])
 
     return (
       <div>
