@@ -10,14 +10,17 @@ import ImageCropper from './ImageCropper'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import styles from './styles.module.css'
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
-    width: 320,
+    width: '100%',
     height: 320,
     border: '2px dotted  #ccc',
     borderRadius: 5
+  },
+  button: {
+    backgroundColor: theme.palette.background.paper
   }
-})
+}))
 
 export type ImageUploaderProps = {
   selectImageText?: string | JSX.Element
@@ -91,42 +94,40 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
     }, [image, onCrop, cropperStyle])
 
     return (
-      <div>
-        <form>
-          <Grid container spacing={2} direction='row'>
-            {image ? (
-              <div>
-                {cropper}
+      <form className={styles.uploaderContainer}>
+        <Grid container spacing={2} direction='row'>
+          {image ? (
+            <div className={styles.uploaderContainer}>
+              {cropper}
 
-                <div className={styles.closeButton}>
-                  <IconButton onClick={reset}>
-                    <CloseIcon />
-                  </IconButton>
-                </div>
+              <div className={styles.closeButton}>
+                <IconButton className={classes.button} onClick={reset}>
+                  <CloseIcon />
+                </IconButton>
               </div>
-            ) : (
-              <Grid
-                container
-                alignItems='center'
-                className={classes.container}
-                justify='center'
-                onClick={() =>
-                  inputRef.current ? inputRef.current.click() : null
-                }
-              >
-                <Typography variant='h4'>{selectImageText}</Typography>
-                <input
-                  name='files'
-                  onChange={uploadImage}
-                  type='file'
-                  hidden
-                  ref={inputRef}
-                />
-              </Grid>
-            )}
-          </Grid>
-        </form>
-      </div>
+            </div>
+          ) : (
+            <Grid
+              container
+              alignItems='center'
+              className={classes.container}
+              justify='center'
+              onClick={() =>
+                inputRef.current ? inputRef.current.click() : null
+              }
+            >
+              <Typography variant='h4'>{selectImageText}</Typography>
+              <input
+                name='files'
+                onChange={uploadImage}
+                type='file'
+                hidden
+                ref={inputRef}
+              />
+            </Grid>
+          )}
+        </Grid>
+      </form>
     )
   }
 )

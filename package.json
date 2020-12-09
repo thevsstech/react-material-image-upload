@@ -1,6 +1,6 @@
 {
   "name": "@thevsstech/react-material-image-uploader",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "description": "a image uploader component with zoom, scale, crop support",
   "author": "thevsstech",
   "license": "MIT",
@@ -24,7 +24,9 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0"
+    "react": "^16.0.0",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -60,9 +62,8 @@
   "files": [
     "dist"
   ],
+
   "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
     "cropperjs": "^1.5.9",
     "react-cropper": "^2.1.4"
   }

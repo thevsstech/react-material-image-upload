@@ -8,8 +8,8 @@
 
 .buttonContainer{
   position: absolute;
-  bottom: 0;
-  right: 50px;
+  bottom: 15px;
+  left: 0;
   flex-direction: row;
 }
 
@@ -26,11 +26,18 @@
   align-items: center;
   justify-content: center;
   flex: 1;
+  padding: 15px;
   margin-top: 15px;
 }
 
 .closeButton{
   position: absolute;
-  right: 50px;
+  right: 20px;
   top: 100px;
+}
+
+.uploaderContainer{
+  flex: 1;
+  display: flex;
+
 }

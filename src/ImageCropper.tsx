@@ -14,7 +14,7 @@ type Props = {
 
 const defaultStyles = {
   container: {
-    width: 320,
+    width: '100%',
     height: 320
   }
 }
