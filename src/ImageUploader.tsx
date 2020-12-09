@@ -10,13 +10,17 @@ import ImageCropper from './ImageCropper'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import styles from './styles.module.css'
-const useStyles = makeStyles((theme) => ({
-  container: {
+import useDragDrop from './useDragDrop'
+import { Theme } from '@material-ui/core/styles/createMuiTheme'
+import { checkMimeTypes, readFile } from './check'
+
+const useStyles = makeStyles<Theme, { active: boolean }>((theme) => ({
+  container: (props) => ({
     width: '100%',
     height: 320,
-    border: '2px dotted  #ccc',
+    border: props.active ? '2px dotted #fff' : '2px dotted  #ccc',
     borderRadius: 5
-  },
+  }),
   button: {
     backgroundColor: theme.palette.background.paper
   }
@@ -30,8 +34,9 @@ export type ImageType = {
 export type ImageUploaderProps = {
   selectImageText?: string | JSX.Element
   defaultImage?: ImageType
-  previewText: string
+  dragText?: string
   cropperStyle?: React.CSSProperties
+  accept?: string[]
 }
 
 export type ImageUploaderRef = {
@@ -42,9 +47,10 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
   (
     {
       selectImageText = 'Select Image',
-      previewText = 'Preview',
+      dragText = 'Drop Files Here',
       cropperStyle,
-      defaultImage
+      defaultImage,
+      accept = ['image/png', 'image/jpeg', 'image/jpg']
     },
     ref
   ) => {
@@ -64,8 +70,6 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
       [image?.name, url]
     )
 
-    const classes = useStyles()
-
     const onCrop = useCallback(
       (image: string) => {
         setUrl(image)
@@ -77,21 +81,27 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
       if (files && files.length) {
         if (files.length > 1) {
         } else {
-          var reader = new FileReader()
-
-          reader.onload = function (e: ProgressEvent<FileReader>) {
-            if (e && e.target?.result) {
-              setImage({
-                url: e.target.result as string,
-                name: files[0].name
-              })
-            }
-          }
-
-          reader.readAsDataURL(files[0])
+          readFile(files[0], setImage)
         }
       }
     }, [])
+
+    const handleDrop = useCallback(
+      (files: FileList) => {
+        if (checkMimeTypes(files[0], accept)) {
+          readFile(files[0], setImage)
+        }
+      },
+      [accept]
+    )
+    const { handlers, dragging, overArea } = useDragDrop(handleDrop)
+    const active = useMemo(
+      () => ({
+        active: dragging || overArea
+      }),
+      [dragging, overArea]
+    )
+    const classes = useStyles(active)
 
     const reset = () => {
       setImage(undefined)
@@ -120,6 +130,7 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
           ) : (
             <Grid
               container
+              {...handlers}
               alignItems='center'
               className={classes.container}
               justify='center'
@@ -127,12 +138,15 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
                 inputRef.current ? inputRef.current.click() : null
               }
             >
-              <Typography variant='h4'>{selectImageText}</Typography>
+              <Typography variant='h5'>
+                {active.active ? dragText : selectImageText}
+              </Typography>
               <input
                 name='files'
                 onChange={uploadImage}
                 type='file'
                 hidden
+                accept={accept ? accept.join(',') : undefined}
                 ref={inputRef}
               />
             </Grid>

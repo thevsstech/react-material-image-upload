@@ -39,12 +39,13 @@ type ShowParameters = Omit<State, 'visible'>
 const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
   (props, forwardRef) => {
     const {
-      previewText,
+      dragText,
       theme,
       selectImageText,
       title,
       saveText,
-      cancelText
+      cancelText,
+      accept
     } = props
 
     const [state, setState] = useState<State>({
@@ -114,7 +115,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
               <ImageUploader
                 ref={ref}
                 defaultImage={state.defaultImage}
-                {...{ previewText, selectImageText }}
+                {...{ dragText, selectImageText, accept }}
               />
             </div>
 

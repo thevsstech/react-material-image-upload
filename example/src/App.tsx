@@ -29,7 +29,7 @@ const App = () => {
 
 <SingleUploaderModal
   theme={theme}
-  previewText={'preview'}
+  dragText={'drop files here'}
   saveText={'save'}
   title={'Upload image'}
   cancelText={'cancel'}
