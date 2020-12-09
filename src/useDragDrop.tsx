@@ -46,6 +46,9 @@ export default function useDragDrop<T extends HTMLElement>(handleDrop: Props) {
     if (e.dataTransfer.files && e.dataTransfer.files.length && handleDrop) {
       handleDrop(e.dataTransfer.files)
     }
+
+    setDragging(false)
+    setOverArea(false)
   }
 
   return {
