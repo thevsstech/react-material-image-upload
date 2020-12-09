@@ -23,7 +23,7 @@ type Props = Exclude<ImageUploaderProps, 'defaultImage'> & {
 }
 
 export type SingleUploaderRef = {
-  show: (defaultImage?: string) => void
+  show: (state: ShowParameters) => void
   hide: () => void
 }
 
@@ -43,6 +43,8 @@ type State = {
   onSave: (image?: string) => void
   onCancel?: () => void
 }
+
+type ShowParameters = Exclude<SingleUploaderRef, 'visible'>
 
 const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
   (
@@ -72,11 +74,11 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
     useImperativeHandle(
       forwardRef,
       () => ({
-        show: (defaultImage?: string) =>
+        show: (state: ShowParameters) =>
           setState((prevState) => ({
             ...prevState,
             visible: true,
-            defaultImage
+            ...state
           })),
         hide: () => handleClose
       }),
