@@ -38,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+type State = {
+  visible: boolean
+  defaultImage?: string
+}
+
 const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
   (
     {
@@ -53,10 +58,16 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
     forwardRef
   ) => {
     const classes = useStyles()
-    const [visible, setVisible] = useState(false)
+    const [state, setState] = useState<State>({
+      visible: false,
+      defaultImage: undefined
+    })
     const ref = useRef<ImageUploaderRef>(null)
     const handleClose = useCallback(() => {
-      setVisible(false)
+      setState({
+        visible: false,
+        defaultImage: undefined
+      })
     }, [])
     const handleSave = useCallback(() => {
       onSave(ref.current ? ref.current.getImageUrl() : undefined)
@@ -66,8 +77,9 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
     useImperativeHandle(
       forwardRef,
       () => ({
-        show: () => setVisible(true),
-        hide: () => setVisible(false)
+        show: (defaultImage?: string) =>
+          setState({ visible: true, defaultImage }),
+        hide: () => handleClose
       }),
       []
     )
@@ -79,7 +91,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       handleClose()
     }, [onCancel])
 
-    return visible ? (
+    return !state.visible ? (
       <Modal
         open
         className={classes.paper}
@@ -99,7 +111,8 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
           <div className={styles.modalContainer}>
             <ImageUploader
               ref={ref}
-              {...{ previewText, defaultImage, selectImageText }}
+              defaultImage={state.defaultImage}
+              {...{ previewText, selectImageText }}
             />
           </div>
 
