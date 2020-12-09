@@ -16,16 +16,15 @@ import Typography from '@material-ui/core/Typography/Typography'
 import { Toolbar } from '@material-ui/core'
 import styles from './styles.module.css'
 import AppBar from '@material-ui/core/AppBar'
-type Props = ImageUploaderProps & {
+type Props = Exclude<ImageUploaderProps, 'defaultImage'> & {
   saveText: string
   cancelText: string
-  onSave: (image?: string) => void
-  onCancel?: () => void
   title: string
 }
 
 export type SingleUploaderRef = {
-  show: () => void
+  show: (defaultImage?: string) => void
+  hide: () => void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -41,55 +40,55 @@ const useStyles = makeStyles((theme) => ({
 type State = {
   visible: boolean
   defaultImage?: string
+  onSave: (image?: string) => void
+  onCancel?: () => void
 }
 
 const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
   (
-    {
-      saveText,
-      cancelText,
-      defaultImage,
-      selectImageText,
-      previewText,
-      onSave,
-      onCancel,
-      title
-    },
+    { saveText, cancelText, selectImageText, previewText, title },
     forwardRef
   ) => {
     const classes = useStyles()
     const [state, setState] = useState<State>({
       visible: false,
-      defaultImage: undefined
+      defaultImage: undefined,
+      onSave: () => null,
+      onCancel: () => null
     })
     const ref = useRef<ImageUploaderRef>(null)
     const handleClose = useCallback(() => {
-      setState({
+      setState((prev) => ({
+        ...prev,
         visible: false,
         defaultImage: undefined
-      })
+      }))
     }, [])
     const handleSave = useCallback(() => {
-      onSave(ref.current ? ref.current.getImageUrl() : undefined)
+      state.onSave(ref.current ? ref.current.getImageUrl() : undefined)
       handleClose()
-    }, [onSave, ref])
+    }, [state.onSave, ref])
 
     useImperativeHandle(
       forwardRef,
       () => ({
         show: (defaultImage?: string) =>
-          setState({ visible: true, defaultImage }),
+          setState((prevState) => ({
+            ...prevState,
+            visible: true,
+            defaultImage
+          })),
         hide: () => handleClose
       }),
       []
     )
 
     const handleCancel = useCallback(() => {
-      if (onCancel) {
-        onCancel()
+      if (state.onCancel) {
+        state.onCancel()
       }
       handleClose()
-    }, [onCancel])
+    }, [state.onCancel])
 
     return !state.visible ? (
       <Modal
