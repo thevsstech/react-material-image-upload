@@ -12,10 +12,8 @@ import ImageUploader, {
   ImageUploaderRef
 } from './ImageUploader'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography/Typography'
-import { Toolbar, ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core'
 import styles from './styles.module.css'
-import AppBar from '@material-ui/core/AppBar'
 type Props = Exclude<ImageUploaderProps, 'defaultImage'> & {
   saveText: string
   cancelText: string
@@ -42,7 +40,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       dragText,
       theme,
       selectImageText,
-      title,
+
       saveText,
       cancelText,
       accept
@@ -96,14 +94,6 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
         aria-describedby='simple-modal-description'
       >
         <ThemeProvider theme={theme}>
-          <AppBar position='static'>
-            <Toolbar className='flex w-full'>
-              <Typography variant='subtitle1' color='inherit'>
-                {title}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-
           <div
             style={{
               flex: 1,
