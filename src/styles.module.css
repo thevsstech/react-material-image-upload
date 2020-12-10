@@ -33,12 +33,16 @@
 .closeButton{
   position: absolute;
   right: 20px;
-  top: 30px;
+  top: 110px;
 }
 
 .uploaderContainer{
   flex: 1;
   display: flex;
+}
+
+.cancelButton{
+  margin-right: 10px;
 }
 
 .galleryButtonContainer{

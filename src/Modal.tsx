@@ -38,7 +38,8 @@ const useStyles = makeStyles<
     boxShadow: props.translucent ? undefined : theme.shadows[5],
     minHeight: props.minHeight || 300,
     outline: props.translucent ? 'none' : '1px solid #ccc',
-    display: 'flex'
+    display: 'flex',
+    flexDirection: 'column'
   })
 }))
 

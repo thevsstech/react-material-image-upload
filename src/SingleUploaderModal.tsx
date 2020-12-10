@@ -14,6 +14,9 @@ import ImageUploader, {
 import Button from '@material-ui/core/Button'
 import { ThemeProvider } from '@material-ui/core'
 import styles from './styles.module.css'
+import Paper from '@material-ui/core/Paper'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
 type Props = Exclude<ImageUploaderProps, 'defaultImage'> & {
   saveText: string
   cancelText: string
@@ -40,7 +43,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       dragText,
       theme,
       selectImageText,
-
+      title,
       saveText,
       cancelText,
       accept
@@ -94,6 +97,20 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
         aria-describedby='simple-modal-description'
       >
         <ThemeProvider theme={theme}>
+          <Paper
+            className='w-full'
+            style={{
+              height: 75,
+              maxHeight: 75
+            }}
+          >
+            <Toolbar className='flex w-full'>
+              <Typography variant='h5' color='inherit'>
+                {title}
+              </Typography>
+            </Toolbar>
+          </Paper>
+
           <div
             style={{
               flex: 1,
@@ -110,7 +127,11 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
             </div>
 
             <div className={styles.downButtonContainer}>
-              <Button onClick={handleCancel} color='primary'>
+              <Button
+                className={styles.cancelButton}
+                onClick={handleCancel}
+                color='primary'
+              >
                 {cancelText}
               </Button>
               <Button variant='contained' onClick={handleSave} color='primary'>
