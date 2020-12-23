@@ -37,6 +37,6 @@ export function readFileAsync(file: File): Promise<ImageType> {
 
     reader.onerror = reject
 
-    reader.readAsArrayBuffer(file)
+    reader.readAsDataURL(file)
   })
 }
