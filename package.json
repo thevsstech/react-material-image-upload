@@ -1,6 +1,6 @@
 {
   "name": "@thevsstech/react-material-image-uploader",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "a image uploader component with zoom, scale, crop support",
   "author": "thevsstech",
   "license": "MIT",

@@ -79,26 +79,43 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
       [previewRef]
     )
 
+    // reads multipleFiles and calls onMultipleImagesGiven callback
+    const readMultipleFiles = (files: File[]) => {
+      if (onMultipleImagesGiven) {
+        const promises: PromiseLike<ImageType>[] = Array.from(
+          files
+        ).map((file: File) => readFileAsync(file))
+
+        Promise.all<ImageType>(promises).then((files) => {
+          onMultipleImagesGiven(files)
+        })
+      }
+    }
+
     const uploadImage = useCallback(({ target: { files } }) => {
       if (files && files.length) {
         if (files.length > 1 && onMultipleImagesGiven) {
-          const promises: PromiseLike<ImageType>[] = Array.from(
-            files
-          ).map((file: File) => readFileAsync(file))
-
-          Promise.all<ImageType>(promises).then((files) => {
-            onMultipleImagesGiven(files)
-          })
+          readMultipleFiles(files)
         } else {
           readFile(files[0], setImage)
         }
       }
     }, [])
 
+    // this methods handles drag and drop images
+    // supports both multiple and single drag & drop
     const handleDrop = useCallback(
       (files: FileList) => {
-        if (checkMimeTypes(files[0], accept)) {
-          readFile(files[0], setImage)
+        if (files.length === 1) {
+          if (checkMimeTypes(files[0], accept)) {
+            readFile(files[0], setImage)
+          }
+        } else {
+          const newFiles = Array.from<File>(files).filter((file) =>
+            checkMimeTypes(file, accept)
+          )
+
+          readMultipleFiles(newFiles)
         }
       },
       [accept]
