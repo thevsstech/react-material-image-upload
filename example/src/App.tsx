@@ -21,7 +21,7 @@ const App = () => {
           url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyApbo-ma8sTWNbKrodLm96Q89u_N2sXX49A&usqp=CAU',
           name: 'gmail.png'
         },
-        onSave: (image: ImageType) => console.log(image),
+        onSave: (image: ImageType |ImageType[]) => console.log(image),
         onCancel: () => console.log('cancel')
       })
     }
@@ -53,6 +53,7 @@ const App = () => {
   saveText={'save'}
   title={'Upload image'}
   cancelText={'cancel'}
+  allowMultipleUpload
 
 
   ref={uploaderRef}/>

@@ -12,7 +12,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import styles from './styles.module.css'
 import useDragDrop from './useDragDrop'
 import { Theme } from '@material-ui/core/styles/createMuiTheme'
-import { checkMimeTypes, readFile } from './check'
+import { checkMimeTypes, readFile, readFileAsync } from './check'
 
 const useStyles = makeStyles<Theme, { active: boolean }>((theme) => ({
   container: (props) => ({
@@ -37,6 +37,7 @@ export type ImageUploaderProps = {
   dragText?: string
   cropperStyle?: React.CSSProperties
   accept?: string[]
+  onMultipleImagesGiven?: (images: ImageType[]) => void
 }
 
 export type ImageUploaderRef = {
@@ -50,6 +51,7 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
       dragText = 'Drop Files Here',
       cropperStyle,
       defaultImage,
+      onMultipleImagesGiven,
       accept = ['image/png', 'image/jpeg', 'image/jpg']
     },
     ref
@@ -79,7 +81,14 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
 
     const uploadImage = useCallback(({ target: { files } }) => {
       if (files && files.length) {
-        if (files.length > 1) {
+        if (files.length > 1 && onMultipleImagesGiven) {
+          const promises: PromiseLike<ImageType>[] = Array.from(
+            files
+          ).map((file: File) => readFileAsync(file))
+
+          Promise.all<ImageType>(promises).then((files) => {
+            onMultipleImagesGiven(files)
+          })
         } else {
           readFile(files[0], setImage)
         }
@@ -146,6 +155,7 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
                 onChange={uploadImage}
                 type='file'
                 hidden
+                multiple={!!onMultipleImagesGiven}
                 accept={accept ? accept.join(',') : undefined}
                 ref={inputRef}
               />

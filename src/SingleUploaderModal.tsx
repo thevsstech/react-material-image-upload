@@ -17,11 +17,21 @@ import styles from './styles.module.css'
 import Paper from '@material-ui/core/Paper'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-type Props = Exclude<ImageUploaderProps, 'defaultImage'> & {
+
+type ImageUploaderPropsWithoutDefaultImage = Exclude<
+  ImageUploaderProps,
+  'defaultImage'
+>
+
+type Props = Exclude<
+  ImageUploaderPropsWithoutDefaultImage,
+  'onMultipleImagesGiven'
+> & {
   saveText: string
   cancelText: string
   title: string
   theme: any
+  allowMultipleUpload?: boolean
 }
 
 export interface SingleUploaderRef {
@@ -32,7 +42,7 @@ export interface SingleUploaderRef {
 type State = {
   visible: boolean
   defaultImage?: ImageType
-  onSave: (image: ImageType) => void
+  onSave: (images: ImageType | ImageType[]) => void
   onCancel?: () => void
 }
 type ShowParameters = Omit<State, 'visible'>
@@ -46,7 +56,8 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       title,
       saveText,
       cancelText,
-      accept
+      accept,
+      allowMultipleUpload
     } = props
 
     const [state, setState] = useState<State>({
@@ -63,6 +74,14 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
         defaultImage: undefined
       }))
     }, [])
+
+    const onMultipleImageGiven = useCallback(
+      (images: ImageType[]) => {
+        state.onSave(images)
+        handleClose()
+      },
+      [state.onSave, handleClose]
+    )
     const handleSave = useCallback(() => {
       state.onSave(ref.current ? ref.current.getImageUrl() : {})
       handleClose()
@@ -121,6 +140,9 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
             <div className={styles.modalContainer}>
               <ImageUploader
                 ref={ref}
+                onMultipleImagesGiven={
+                  allowMultipleUpload ? onMultipleImageGiven : undefined
+                }
                 defaultImage={state.defaultImage}
                 {...{ dragText, selectImageText, accept }}
               />

@@ -21,3 +21,22 @@ export const readFile = (
 
   reader.readAsDataURL(file)
 }
+
+export function readFileAsync(file: File): Promise<ImageType> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e && e.target?.result) {
+        resolve({
+          url: e.target.result as string,
+          name: file.name
+        })
+      }
+    }
+
+    reader.onerror = reject
+
+    reader.readAsArrayBuffer(file)
+  })
+}
