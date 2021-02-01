@@ -54,7 +54,7 @@ const App = () => {
   title={'Upload image'}
   cancelText={'cancel'}
   allowMultipleUpload
-
+skipCropping
 
   ref={uploaderRef}/>
 

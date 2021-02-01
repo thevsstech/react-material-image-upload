@@ -57,7 +57,8 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
       saveText,
       cancelText,
       accept,
-      allowMultipleUpload
+      allowMultipleUpload,
+      skipCropping
     } = props
 
     const [state, setState] = useState<State>({
@@ -144,7 +145,7 @@ const SingleUploaderModal = React.forwardRef<SingleUploaderRef, Props>(
                   allowMultipleUpload ? onMultipleImageGiven : undefined
                 }
                 defaultImage={state.defaultImage}
-                {...{ dragText, selectImageText, accept }}
+                {...{ dragText, selectImageText, accept, skipCropping }}
               />
             </div>
 

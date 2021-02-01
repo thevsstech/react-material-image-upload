@@ -37,6 +37,7 @@ export type ImageUploaderProps = {
   dragText?: string
   cropperStyle?: React.CSSProperties
   accept?: string[]
+  skipCropping?: boolean
   onMultipleImagesGiven?: (images: ImageType[]) => void
 }
 
@@ -47,6 +48,7 @@ export type ImageUploaderRef = {
 export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
   (
     {
+      skipCropping,
       selectImageText = 'Select Image',
       dragText = 'Drop Files Here',
       cropperStyle,
@@ -94,7 +96,7 @@ export default React.forwardRef<ImageUploaderRef, ImageUploaderProps>(
 
     const uploadImage = useCallback(({ target: { files } }) => {
       if (files && files.length) {
-        if (files.length > 1 && onMultipleImagesGiven) {
+        if ((files.length > 1 && onMultipleImagesGiven) || skipCropping) {
           readMultipleFiles(files)
         } else {
           readFile(files[0], setImage)
