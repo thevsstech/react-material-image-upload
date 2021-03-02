@@ -53,7 +53,7 @@ export function Modal({
   const classes = useStyles({ translucent, minHeight })
   const [styles] = useState(getModalStyle())
   return (
-    <MaterialModal {...rest}>
+    <MaterialModal disableEnforceFocus {...rest}>
       <Container maxWidth={maxWidth} style={styles} className={classes.paper}>
         {children}
       </Container>
